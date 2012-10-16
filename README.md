@@ -1,14 +1,14 @@
-![status](https://secure.travis-ci.org/wearefractal/APPNAME.png?branch=master)
+![status](https://secure.travis-ci.org/wearefractal/mixer.png?branch=master)
 
 ## Information
 
 <table>
 <tr> 
-<td>Package</td><td>APPNAME</td>
+<td>Package</td><td>mixer</td>
 </tr>
 <tr>
 <td>Description</td>
-<td>NOTHING HERE YET</td>
+<td>Modules with events and mixins</td>
 </tr>
 <tr>
 <td>Node Version</td>
@@ -19,12 +19,72 @@
 ## Usage
 
 ```coffee-script
-NOTHING HERE YET
+module = mixer.create()
+
+module.extend
+  test: "hello"
+
+console.log module.test # hello
+
+module.on "change:prop", (val) ->
+  console.log "prop changed to #{val}"
+
+module.set 'prop', 123
 ```
 
-## Examples
+## Core
 
-You can view more examples in the [example folder.](https://github.com/wearefractal/APPNAME/tree/master/examples)
+##### create([obj])
+
+Create returns a new module. Passing in obj in is the same as create().extend(obj)
+
+##### clone(obj)
+
+Shallow copy of obj to new object
+
+##### nu(obj)
+
+Shallow prototype clone of obj
+
+##### extend(obj, obj1)
+
+Shallow mixin of obj1 into obj
+
+## Modules
+
+All functions of a module should return the module to be chainable. All modules are an EventEmitter.
+
+##### clone()
+
+Creates a new instance of the module
+
+##### extend(obj)
+
+Mixes in obj into module
+
+##### get(key)
+
+Returns value of key or undefined
+
+##### set(key, val[, silent=false])
+
+Sets the value of key to val. 
+
+Will emit ```change, (key, val)``` and ```change:key, (val)``` unless silent is true.
+
+Global mixer object will emit ```change, (module, key, val)``` and ```change:key, (module, val)``` unless silent is true.
+
+##### has(key)
+
+Will return true if key exists, false if it doesn't.
+
+##### remove(key[, silent=false])
+
+Delete the value of key.
+
+Will emit ```change, (key)``` ```change:key``` ```remove, (key)``` and ```remove:key``` unless silent is true.
+
+Global mixer object will emit ```change, (module, key)``` ```change:key, (module)``` ```remove, (module, key)``` ```remove:key, (module)``` unless silent is true.
 
 ## LICENSE
 

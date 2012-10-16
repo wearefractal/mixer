@@ -157,7 +157,6 @@
 
   mixer = {
     _: {},
-    events: {},
     emitter: EventEmitter,
     create: function(o) {
       var inst;
@@ -187,7 +186,7 @@
     }
   };
 
-  mixer.extend(mixer.events, new mixer.emitter);
+  mixer.events = new mixer.emitter;
 
   mixer.extend(mixer, mixer.events);
 

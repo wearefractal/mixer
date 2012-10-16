@@ -92,7 +92,6 @@ guids = -1
 
 mixer =
   _: {}
-  events: {}
   emitter: EventEmitter
   create: (o) ->
     inst = mixer.nu o
@@ -112,7 +111,7 @@ mixer =
     o[k] = v for k,v of n
     return o
 
-mixer.extend mixer.events, new mixer.emitter
+mixer.events = new mixer.emitter
 mixer.extend mixer, mixer.events
 
 if module?

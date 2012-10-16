@@ -14,6 +14,10 @@
 <td>Node Version</td>
 <td>>= 0.4</td>
 </tr>
+<tr>
+<td>Size</td>
+<td>2.5k</td>
+</tr>
 </table>
 
 ## Usage

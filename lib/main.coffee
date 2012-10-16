@@ -38,18 +38,24 @@ class EventEmitter
 
 Base = ->
 Module =
-  clone: -> mixer.module @
+  create: (o={}) -> mixer.extend @clone(), o
+  clone: -> mixer.create @
   extend: (o) -> mixer.extend @, o
   get: (k) -> @_.props[k]
+  getAll: -> @_.props
 
   set: (k, v, silent=false) -> 
-    @_.props[k] = v
-    unless silent
-      @emit "change", k, v
-      @emit "change:#{k}", v
-      mixer.emit "change", @, k, v
-      mixer.emit "change:#{k}", @, v
-    return @
+    if typeof k is 'object'
+      @set ky, v for ky,v of k
+      return @
+    else
+      @_.props[k] = v
+      unless silent
+        @emit "change", k, v
+        @emit "change:#{k}", v
+        mixer.emit "change", @, k, v
+        mixer.emit "change:#{k}", @, v
+      return @
 
   has: (k) -> @_.props[k]?
 
@@ -92,6 +98,7 @@ guids = -1
 
 mixer =
   _: {}
+  events: new EventEmitter
   emitter: EventEmitter
   create: (o) ->
     inst = mixer.nu o
@@ -111,7 +118,6 @@ mixer =
     o[k] = v for k,v of n
     return o
 
-mixer.events = new mixer.emitter
 mixer.extend mixer, mixer.events
 
 if module?

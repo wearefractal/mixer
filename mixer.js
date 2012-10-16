@@ -83,8 +83,14 @@
   Base = function() {};
 
   Module = {
+    create: function(o) {
+      if (o == null) {
+        o = {};
+      }
+      return mixer.extend(this.clone(), o);
+    },
     clone: function() {
-      return mixer.module(this);
+      return mixer.create(this);
     },
     extend: function(o) {
       return mixer.extend(this, o);
@@ -92,18 +98,30 @@
     get: function(k) {
       return this._.props[k];
     },
+    getAll: function() {
+      return this._.props;
+    },
     set: function(k, v, silent) {
+      var ky;
       if (silent == null) {
         silent = false;
       }
-      this._.props[k] = v;
-      if (!silent) {
-        this.emit("change", k, v);
-        this.emit("change:" + k, v);
-        mixer.emit("change", this, k, v);
-        mixer.emit("change:" + k, this, v);
+      if (typeof k === 'object') {
+        for (ky in k) {
+          v = k[ky];
+          this.set(ky, v);
+        }
+        return this;
+      } else {
+        this._.props[k] = v;
+        if (!silent) {
+          this.emit("change", k, v);
+          this.emit("change:" + k, v);
+          mixer.emit("change", this, k, v);
+          mixer.emit("change:" + k, this, v);
+        }
+        return this;
       }
-      return this;
     },
     has: function(k) {
       return this._.props[k] != null;
@@ -157,6 +175,7 @@
 
   mixer = {
     _: {},
+    events: new EventEmitter,
     emitter: EventEmitter,
     create: function(o) {
       var inst;
@@ -185,8 +204,6 @@
       return o;
     }
   };
-
-  mixer.events = new mixer.emitter;
 
   mixer.extend(mixer, mixer.events);
 

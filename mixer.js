@@ -157,6 +157,8 @@
 
   mixer = {
     _: {},
+    events: {},
+    emitter: EventEmitter,
     create: function(o) {
       var inst;
       inst = mixer.nu(o);
@@ -164,7 +166,7 @@
       inst.guid = ++guids;
       inst._ = mixer._[inst.guid] = {
         props: {},
-        events: new EventEmitter
+        events: new mixer.emitter
       };
       return inst;
     },
@@ -185,7 +187,9 @@
     }
   };
 
-  mixer.extend(mixer, new EventEmitter);
+  mixer.extend(mixer.events, new mixer.emitter);
+
+  mixer.extend(mixer, mixer.events);
 
   if (typeof module !== "undefined" && module !== null) {
     module.exports = mixer;

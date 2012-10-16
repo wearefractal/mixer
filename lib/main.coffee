@@ -53,8 +53,6 @@ Module =
       unless silent
         @emit "change", k, v
         @emit "change:#{k}", v
-        mixer.emit "change", @, k, v
-        mixer.emit "change:#{k}", @, v
       return @
 
   has: (k) -> @_.props[k]?
@@ -64,17 +62,14 @@ Module =
     unless silent
       @emit "change", k
       @emit "change:#{k}"
-      mixer.emit "change", @, k
-      mixer.emit "change:#{k}", @
 
       @emit "remove", k
       @emit "remove:#{k}"
-      mixer.emit "remove", @, k
-      mixer.emit "remove:#{k}", @
     return @
 
-  emit: (a...) ->
-    @_.events.emit a...
+  emit: (e, d...) ->
+    @_.events.emit e, d...
+    mixer.emit e, @, d...
     return @
 
   on: (e, fn) ->

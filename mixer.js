@@ -117,8 +117,6 @@
         if (!silent) {
           this.emit("change", k, v);
           this.emit("change:" + k, v);
-          mixer.emit("change", this, k, v);
-          mixer.emit("change:" + k, this, v);
         }
         return this;
       }
@@ -134,19 +132,16 @@
       if (!silent) {
         this.emit("change", k);
         this.emit("change:" + k);
-        mixer.emit("change", this, k);
-        mixer.emit("change:" + k, this);
         this.emit("remove", k);
         this.emit("remove:" + k);
-        mixer.emit("remove", this, k);
-        mixer.emit("remove:" + k, this);
       }
       return this;
     },
     emit: function() {
-      var a, _ref;
-      a = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      (_ref = this._.events).emit.apply(_ref, a);
+      var d, e, _ref;
+      e = arguments[0], d = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      (_ref = this._.events).emit.apply(_ref, [e].concat(__slice.call(d)));
+      mixer.emit.apply(mixer, [e, this].concat(__slice.call(d)));
       return this;
     },
     on: function(e, fn) {

@@ -100,7 +100,7 @@ mixer =
     mixer.extend inst, Module
     inst.guid = ++guids
     inst._ = mixer._[inst.guid] = 
-      props: {}
+      props: (if o?._?.props? then o._.props else {})
       events: new mixer.emitter
     return inst
 

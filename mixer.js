@@ -173,12 +173,12 @@
     events: new EventEmitter,
     emitter: EventEmitter,
     create: function(o) {
-      var inst;
+      var inst, _ref;
       inst = mixer.nu(o);
       mixer.extend(inst, Module);
       inst.guid = ++guids;
       inst._ = mixer._[inst.guid] = {
-        props: {},
+        props: ((o != null ? (_ref = o._) != null ? _ref.props : void 0 : void 0) != null ? o._.props : {}),
         events: new mixer.emitter
       };
       return inst;

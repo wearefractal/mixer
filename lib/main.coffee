@@ -38,7 +38,7 @@ class EventEmitter
 
 Base = ->
 Module =
-  create: (o={}) -> mixer.extend @clone(), o
+  create: (o) -> mixer.extend @clone(), o
   clone: -> mixer.create @
   extend: (o) -> mixer.extend @, o
   get: (k) -> @_.props[k]
@@ -96,11 +96,12 @@ mixer =
   events: new EventEmitter
   emitter: EventEmitter
   create: (o) ->
-    inst = mixer.nu o
-    mixer.extend inst, Module
-    inst.guid = ++guids
-    inst._ = mixer._[inst.guid] = 
-      props: (if o?._?.props? then o._.props else {})
+    inst = mixer.nu Module
+    mixer.extend inst, mixer.nu o
+    guid = ++guids
+    inst._ = mixer._[guid] = 
+      id: guid
+      props: {}
       events: new mixer.emitter
     return inst
 
@@ -110,6 +111,7 @@ mixer =
 
   clone: (o) -> mixer.extend {}, o
   extend: (o, n) ->
+    return o unless n?
     o[k] = v for k,v of n
     return o
 

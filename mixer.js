@@ -84,9 +84,6 @@
 
   Module = {
     create: function(o) {
-      if (o == null) {
-        o = {};
-      }
       return mixer.extend(this.clone(), o);
     },
     clone: function() {
@@ -173,12 +170,13 @@
     events: new EventEmitter,
     emitter: EventEmitter,
     create: function(o) {
-      var inst, _ref;
-      inst = mixer.nu(o);
-      mixer.extend(inst, Module);
-      inst.guid = ++guids;
-      inst._ = mixer._[inst.guid] = {
-        props: ((o != null ? (_ref = o._) != null ? _ref.props : void 0 : void 0) != null ? o._.props : {}),
+      var guid, inst;
+      inst = mixer.nu(Module);
+      mixer.extend(inst, mixer.nu(o));
+      guid = ++guids;
+      inst._ = mixer._[guid] = {
+        id: guid,
+        props: {},
         events: new mixer.emitter
       };
       return inst;
@@ -192,6 +190,9 @@
     },
     extend: function(o, n) {
       var k, v;
+      if (n == null) {
+        return o;
+      }
       for (k in n) {
         v = n[k];
         o[k] = v;

@@ -32,15 +32,37 @@ describe 'modules', ->
     it 'should create module from empty', (done) ->
       o = mixer.create()
       should.exist o
-      should.exist o.guid
       done()
 
     it 'should create module from object', (done) ->
       o = mixer.create test: "hello"
       should.exist o
       should.exist o.test
-      should.exist o.guid
       o.test.should.equal "hello"
+      done()
+
+    it 'should create module from module', (done) ->
+      o = mixer.create(test: "hello").set('hello','world')
+      non = o.create()
+      should.exist non
+      should.exist non.test
+      should.not.exist non.get 'hello'
+      non._.id.should.not.equal o._.id
+      non.test.should.equal "hello"
+      done()
+
+    it 'should extend module with overrides', (done) ->
+      opt =
+        test: "hello"
+        create: (o) -> mixer.create(@clone(), o).set 'hello', 'world'
+
+      o = mixer.create opt
+      non = o.create()
+      should.exist non
+      should.exist non.test
+      should.exist non.get 'hello'
+      non._.id.should.not.equal o._.id
+      non.test.should.equal "hello"
       done()
 
     it 'should get/set/has/remove', (done) ->

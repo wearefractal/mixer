@@ -77,6 +77,7 @@ class Module extends EventEmitter
 Module.create = -> new @ arguments...
 
 mixer =
+  _events: new EventEmitter
   module: Module
   emitter: EventEmitter
   create: -> mixer.module.create arguments...
@@ -84,7 +85,7 @@ mixer =
     o[k]=v for k,v of n
     return o
 
-mixer.extend mixer, new EventEmitter
+mixer.extend mixer, mixer._events
 
 if module?
   module.exports = mixer

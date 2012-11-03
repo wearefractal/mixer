@@ -8,25 +8,28 @@
 </tr>
 <tr>
 <td>Description</td>
-<td>Modules with events and mixins</td>
+<td>Modules with observables, events, and mixins</td>
 </tr>
 <tr>
 <td>Node Version</td>
-<td>>= 0.4</td>
+<td>*</td>
 </tr>
 <tr>
 <td>Size</td>
-<td>2.5k</td>
+<td>2.6k</td>
 </tr>
 </table>
 
+If you don't like the coffee-script examples use js2coffee for a conversion.
+
 ## Usage
+
+### Creating a simple empty module
 
 ```coffee-script
 module = mixer.create()
 
-module.extend
-  test: "hello"
+module.extend test: "hello"
 
 console.log module.test # hello
 
@@ -36,19 +39,32 @@ module.on "change:prop", (val) ->
 module.set 'prop', 123
 ```
 
+### Creating a custom module
+
+```coffee-script
+class SweetModule extends mixer.module
+  constructor: (sweet) ->
+    super
+    @set 'sweet', sweet
+
+module = SweetModule.create(true)
+
+console.log module.get('sweet') # true
+
+module.on "change:sweet", (bool) ->
+  if bool is true
+    console.log "module is now sweet!"
+  else
+    console.log "module is no longer sweet!"
+
+module.set 'sweet', false
+```
+
 ## Core
 
 ##### create([obj])
 
 Create returns a new module. Passing in obj in is the same as create().extend(obj)
-
-##### clone(obj)
-
-Shallow copy of obj to new object
-
-##### nu(obj)
-
-Shallow prototype clone of obj
 
 ##### extend(obj, obj1)
 
@@ -57,10 +73,6 @@ Shallow mixin of obj1 into obj
 ## Modules
 
 All functions of a module should return the module to be chainable. All modules are an EventEmitter.
-
-##### clone()
-
-Creates a new instance of the module
 
 ##### extend(obj)
 

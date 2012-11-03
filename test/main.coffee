@@ -3,19 +3,6 @@ should = require 'should'
 require 'mocha'
 
 describe 'core', ->
-  describe 'nu()', ->
-    it 'should create new nu from empty', (done) ->
-      o = mixer.nu()
-      should.exist o
-      done()
-
-    it 'should create new nu from object', (done) ->
-      o = mixer.nu test: "hello"
-      should.exist o
-      should.exist o.test
-      o.test.should.equal "hello"
-      done()
-
   describe 'extend()', ->
     it 'should work', (done) ->
       o = test: 1, wat: 'dood'
@@ -28,40 +15,34 @@ describe 'core', ->
       done()
 
 describe 'modules', ->
-  describe 'create()', ->
+  describe 'create', ->
     it 'should create module from empty', (done) ->
       o = mixer.create()
       should.exist o
       done()
 
     it 'should create module from object', (done) ->
-      o = mixer.create test: "hello"
+      class test extends mixer.module
+        constructor: ->
+          super
+          @test = "hello"
+      o = test.create()
       should.exist o
       should.exist o.test
       o.test.should.equal "hello"
       done()
 
-    it 'should create module from module', (done) ->
-      o = mixer.create(test: "hello").set('hello','world')
-      non = o.create()
-      should.exist non
-      should.exist non.test
-      should.not.exist non.get 'hello'
-      non._.id.should.not.equal o._.id
-      non.test.should.equal "hello"
-      done()
-
     it 'should extend module with overrides', (done) ->
-      opt =
-        test: "hello"
-        create: (o) -> mixer.create(@clone(), o).set 'hello', 'world'
+      class test extends mixer.module
+        constructor: ->
+          super
+          @test = "hello"
+          @set 'hello', 'world'
 
-      o = mixer.create opt
-      non = o.create()
+      non = test.create()
       should.exist non
       should.exist non.test
       should.exist non.get 'hello'
-      non._.id.should.not.equal o._.id
       non.test.should.equal "hello"
       done()
 

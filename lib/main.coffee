@@ -36,15 +36,17 @@ class EventEmitter
   off: @::removeListener
   offAll: @::removeAllListeners
 
-Base = ->
-Module =
-  create: (o) -> mixer.extend @clone(), o
-  clone: -> mixer.create @
+class Module extends EventEmitter
+  constructor: (o) ->
+    super
+    @_ = props: {}
+    @set o if o?
+
   extend: (o) -> mixer.extend @, o
   get: (k) -> @_.props[k]
   getAll: -> @_.props
 
-  set: (k, v, silent=false) -> 
+  set: (k, v, silent) -> 
     if typeof k is 'object'
       @set ky, v for ky,v of k
       return @
@@ -57,7 +59,7 @@ Module =
 
   has: (k) -> @_.props[k]?
 
-  remove: (k, silent=false) -> 
+  remove: (k, silent) -> 
     delete @_.props[k]
     unless silent
       @emit "change", k
@@ -68,54 +70,21 @@ Module =
     return @
 
   emit: (e, d...) ->
-    @_.events.emit e, d...
+    super
     mixer.emit e, @, d...
     return @
 
-  on: (e, fn) ->
-    @_.events.on e, fn.bind @
-    return @
-
-  once: (e, fn) ->
-    @_.events.once e, fn.bind @
-    return @
-
-  off: (a...) ->
-    @_.events.off a...
-    return @
-
-  offAll: (a...) ->
-    @_.events.offAll a...
-    return @
-
-
-guids = -1
+Module.create = -> new @ arguments...
 
 mixer =
-  _: {}
-  events: new EventEmitter
+  module: Module
   emitter: EventEmitter
-  create: (o) ->
-    inst = mixer.nu Module
-    mixer.extend inst, mixer.nu o
-    guid = ++guids
-    inst._ = mixer._[guid] = 
-      id: guid
-      props: {}
-      events: new mixer.emitter
-    return inst
-
-  nu: (o) ->
-    Base:: = o
-    return new Base
-
-  clone: (o) -> mixer.extend {}, o
-  extend: (o, n) ->
-    return o unless n?
-    o[k] = v for k,v of n
+  create: -> mixer.module.create arguments...
+  extend: (o={}, n={}) -> 
+    o[k]=v for k,v of n
     return o
 
-mixer.extend mixer, mixer.events
+mixer.extend mixer, new EventEmitter
 
 if module?
   module.exports = mixer

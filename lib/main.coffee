@@ -71,21 +71,23 @@ class Module extends EventEmitter
 
   emit: (e, d...) ->
     super
-    mixer.emit e, @, d...
+    (l.emit e, @, d... for l in mixer._listeners)
     return @
 
 Module.create = -> new @ arguments...
 
 mixer =
-  _events: new EventEmitter
+  _listeners: []
   module: Module
   emitter: EventEmitter
-  create: -> mixer.module.create arguments...
-  extend: (o={}, n={}) -> 
+  listen: (emitter) -> mixer._listeners.push emitter
+  create: -> Module.create arguments...
+  extend: (o, n) -> 
     o[k]=v for k,v of n
     return o
 
-mixer.extend mixer, mixer._events
+mixer.extend mixer, new EventEmitter
+mixer.listen mixer
 
 if module?
   module.exports = mixer

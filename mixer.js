@@ -92,7 +92,7 @@
         props: {}
       };
       if (o != null) {
-        this.set(o);
+        this.extend(o);
       }
     }
 
@@ -158,11 +158,13 @@
   })(EventEmitter);
 
   Module.create = function() {
+    var a;
+    a = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     return (function(func, args, ctor) {
       ctor.prototype = func.prototype;
       var child = new ctor, result = func.apply(child, args);
       return Object(result) === result ? result : child;
-    })(this, arguments, function(){});
+    })(this, a, function(){});
   };
 
   mixer = {
@@ -173,7 +175,9 @@
       return mixer._listeners.push(emitter);
     },
     create: function() {
-      return Module.create.apply(Module, arguments);
+      var a;
+      a = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return Module.create.apply(Module, a);
     },
     extend: function(o, n) {
       var k, v;

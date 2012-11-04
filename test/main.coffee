@@ -22,6 +22,13 @@ describe 'modules', ->
       done()
 
     it 'should create module from object', (done) ->
+      o = mixer.create test: "hello"
+      should.exist o
+      should.exist o.test
+      o.test.should.equal "hello"
+      done()
+
+    it 'should be extendable into new modules', (done) ->
       class test extends mixer.module
         constructor: ->
           super

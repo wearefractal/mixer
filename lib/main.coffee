@@ -40,7 +40,7 @@ class Module extends EventEmitter
   constructor: (o) ->
     super
     @_ = props: {}
-    @set o if o?
+    @extend o if o?
 
   extend: (o) -> mixer.extend @, o
   get: (k) -> @_.props[k]
@@ -74,14 +74,14 @@ class Module extends EventEmitter
     (l.emit e, @, d... for l in mixer._listeners)
     return @
 
-Module.create = -> new @ arguments...
+Module.create = (a...) -> new @ a...
 
 mixer =
   _listeners: []
   module: Module
   emitter: EventEmitter
   listen: (emitter) -> mixer._listeners.push emitter
-  create: -> Module.create arguments...
+  create: (a...) -> Module.create a...
   extend: (o, n) -> 
     o[k]=v for k,v of n
     return o

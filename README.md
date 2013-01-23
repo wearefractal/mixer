@@ -66,7 +66,7 @@ module.set 'sweet', false
 
 ## Core
 
-##### create([obj])
+##### module([obj])
 
 Create returns a new module. Passing in obj in is the same as create().extend(obj)
 

@@ -1,56 +1,28 @@
-class EventEmitter
-  constructor: ->
-    @events = {}
+if process? and exports?
+  {EventEmitter2} = require '../deps/EventEmitter2'
+else
+  EventEmitter2 = window.EventEmitter2
 
-  emit: (e, args...) ->
-    return false unless @events[e]
-    listener args... for listener in @events[e]
-    return true
+extend = (o, n) -> 
+  o[k]=v for own k,v of n
+  return o
 
-  addListener: (e, listener) ->
-    @emit 'newListener', e, listener
-    (@events[e]?=[]).push listener
-    return @
-
-  on: @::addListener
-
-  once: (e, listener) ->
-    fn = =>
-      @removeListener e, fn
-      listener arguments...
-    @on e, fn
-    return @
-
-  removeListener: (e, listener) ->
-    return @ unless @events[e]
-    @events[e] = (l for l in @events[e] when l isnt listener)
-    return @
-
-  removeAllListeners: (e) ->
-    if e?
-      delete @events[e]
-    else
-      @events = {}
-    return @
-
-  off: @::removeListener
-  offAll: @::removeAllListeners
-
-class Module extends EventEmitter
+class SilentModule extends EventEmitter2
   constructor: (o) ->
-    super
+    super()
     @_ = props: {}
-    @extend o if o?
+    extend @, o
 
-  extend: (o) -> mixer.extend @, o
   get: (k) -> @_.props[k]
   getAll: -> @_.props
 
-  set: (k, v, silent) -> 
+  set: (k, v, silent) ->
+    return unless k?
     if typeof k is 'object'
       @set ky, v for ky,v of k
       return @
     else
+      return unless v?
       @_.props[k] = v
       unless silent
         @emit "change", k, v
@@ -69,25 +41,23 @@ class Module extends EventEmitter
       @emit "remove:#{k}"
     return @
 
-  emit: (e, d...) ->
-    super
-    (l.emit e, @, d... for l in mixer._listeners)
-    return @
+class Module extends SilentModule
+  constructor: (o) ->
+    super o
+    @onAny (a...) ->
+      mixer.emit @event, @, a...
 
-Module.create = (a...) -> new @ a...
+mixer = new SilentModule
+  Module: Module
+  Emitter: EventEmitter2
+  module: (a...) ->
+    create: (o) ->
+      mod = new Module a...
+      mod.set o
+      return mod
+    subclass: (b) -> mixer.module a.concat(b)...
 
-mixer =
-  _listeners: []
-  module: Module
-  emitter: EventEmitter
-  listen: (emitter) -> mixer._listeners.push emitter
-  create: (a...) -> Module.create a...
-  extend: (o, n) -> 
-    o[k]=v for k,v of n
-    return o
-
-mixer.extend mixer, new EventEmitter
-mixer.listen mixer
+  extend: extend
 
 if module?
   module.exports = mixer

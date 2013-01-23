@@ -16,7 +16,7 @@
 </tr>
 <tr>
 <td>Size</td>
-<td>2.6k</td>
+<td>2.4k</td>
 </tr>
 </table>
 
@@ -27,11 +27,15 @@ If you don't like the coffee-script examples use js2coffee for a conversion.
 ### Creating a simple empty module
 
 ```coffee-script
-module = mixer.create()
+module = mixer.module
+  test: ->
+    @set "hello", "test"
 
-module.extend test: "hello"
+instance = module.create()
 
-console.log module.test # hello
+instance.test()
+
+console.log module.get("test") # hello
 
 module.on "change:prop", (val) ->
   console.log "prop changed to #{val}"
@@ -47,7 +51,7 @@ class SweetModule extends mixer.module
     super
     @set 'sweet', sweet
 
-module = SweetModule.create(true)
+module = new SweetModule true
 
 console.log module.get('sweet') # true
 
@@ -86,9 +90,9 @@ Returns value of key or undefined
 
 Sets the value of key to val. 
 
-Will emit ```change, (key, val)``` and ```change:key, (val)``` unless silent is true.
+Will emit ```change, (key, val)``` and ```change.key, (val)``` unless silent is true.
 
-Global mixer object will emit ```change, (module, key, val)``` and ```change:key, (module, val)``` unless silent is true.
+Global mixer object will emit ```change, (module, key, val)``` and ```change.key, (module, val)``` unless silent is true.
 
 ##### has(key)
 
@@ -98,9 +102,9 @@ Will return true if key exists, false if it doesn't.
 
 Delete the value of key.
 
-Will emit ```change, (key)``` ```change:key``` ```remove, (key)``` and ```remove:key``` unless silent is true.
+Will emit ```change, (key)``` ```change.key``` ```remove, (key)``` and ```remove.key``` unless silent is true.
 
-Global mixer object will emit ```change, (module, key)``` ```change:key, (module)``` ```remove, (module, key)``` ```remove:key, (module)``` unless silent is true.
+Global mixer object will emit ```change, (module, key)``` ```change.key, (module)``` ```remove, (module, key)``` ```remove.key, (module)``` unless silent is true.
 
 ## LICENSE
 

@@ -1,7 +1,7 @@
 {
    "name":"mixer",
    "description":"Modules with events and mixins",
-   "version":"0.0.4",
+   "version":"0.0.5",
    "homepage":"http://github.com/wearefractal/mixer",
    "repository":"git://github.com/wearefractal/mixer.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",

@@ -17,44 +17,47 @@ describe 'core', ->
 describe 'modules', ->
   describe 'create', ->
     it 'should create module from empty', (done) ->
-      o = mixer.create()
+      o = mixer.module()
       should.exist o
+      should.exist o.create
       done()
 
     it 'should create module from object', (done) ->
-      o = mixer.create test: "hello"
+      o = mixer.module test: "hello"
       should.exist o
-      should.exist o.test
-      o.test.should.equal "hello"
+      should.exist o.create
+      n = o.create()
+      should.exist n.test
+      n.test.should.equal "hello"
       done()
 
     it 'should be extendable into new modules', (done) ->
-      class test extends mixer.module
-        constructor: ->
-          super
+      test = mixer.module
+        init: ->
           @test = "hello"
       o = test.create()
       should.exist o
+      should.exist o.init
+      o.init()
       should.exist o.test
       o.test.should.equal "hello"
       done()
 
     it 'should extend module with overrides', (done) ->
-      class test extends mixer.module
-        constructor: ->
-          super
+      test = mixer.module
+        init: ->
           @test = "hello"
-          @set 'hello', 'world'
-
-      non = test.create()
+      non = test.create hello: "world"
       should.exist non
+      should.exist non.init
+      non.init()
       should.exist non.test
       should.exist non.get 'hello'
       non.test.should.equal "hello"
       done()
 
     it 'should get/set/has/remove', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       nuo = o.set 'test', 'hello'
@@ -71,7 +74,7 @@ describe 'modules', ->
 
   describe 'module events', ->
     it 'should emit event on set', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       o.on 'change', (k, v) ->
@@ -81,7 +84,7 @@ describe 'modules', ->
       o.set 'test', 'hello'
 
     it 'should emit namespaced event on set', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       o.on 'change:test', (v) ->
@@ -91,7 +94,7 @@ describe 'modules', ->
       o.set 'test', 'hello'
 
     it 'should emit event on remove', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       o.on 'remove', (k) ->
@@ -101,7 +104,7 @@ describe 'modules', ->
       o.remove 'test'
 
     it 'should emit namespaced event on remove', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       o.on 'remove:test', done
@@ -109,7 +112,7 @@ describe 'modules', ->
 
   describe 'global events', ->
     it 'should emit event on set', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
       mixer.on 'change', (mod, k, v) ->
         should.exist mod
@@ -118,12 +121,12 @@ describe 'modules', ->
         mod.should.equal o
         k.should.equal 'test'
         v.should.equal 'hello'
-        mixer.offAll()
+        mixer.removeAllListeners()
         done()
       o.set 'test', 'hello'
 
     it 'should emit namespaced event on set', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       mixer.on 'change:test', (mod, v) ->
@@ -131,12 +134,12 @@ describe 'modules', ->
         should.exist mod
         mod.should.equal o
         v.should.equal 'hello'
-        mixer.offAll()
+        mixer.removeAllListeners()
         done()
       o.set 'test', 'hello'
 
     it 'should emit event on remove', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       mixer.on 'remove', (mod, k) ->
@@ -144,17 +147,17 @@ describe 'modules', ->
         should.exist k
         mod.should.equal o
         k.should.equal 'test'
-        mixer.offAll()
+        mixer.removeAllListeners()
         done()
       o.remove 'test'
 
     it 'should emit namespaced event on remove', (done) ->
-      o = mixer.create()
+      o = mixer.module().create()
       should.exist o
 
       mixer.on 'remove:test', (mod) ->
         should.exist mod
         mod.should.equal o
-        mixer.offAll()
+        mixer.removeAllListeners()
         done()
       o.remove 'test'

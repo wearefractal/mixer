@@ -612,7 +612,7 @@
         this._.props[k] = v;
         if (!silent) {
           this.emit("change", k, v);
-          this.emit("change:" + k, v);
+          this.emit("change." + k, v);
         }
         return this;
       }
@@ -626,9 +626,9 @@
       delete this._.props[k];
       if (!silent) {
         this.emit("change", k);
-        this.emit("change:" + k);
+        this.emit("change." + k);
         this.emit("remove", k);
-        this.emit("remove:" + k);
+        this.emit("remove." + k);
       }
       return this;
     };

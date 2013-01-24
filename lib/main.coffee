@@ -26,7 +26,7 @@ class SilentModule extends EventEmitter2
       @_.props[k] = v
       unless silent
         @emit "change", k, v
-        @emit "change:#{k}", v
+        @emit "change.#{k}", v
       return @
 
   has: (k) -> @_.props[k]?
@@ -35,10 +35,10 @@ class SilentModule extends EventEmitter2
     delete @_.props[k]
     unless silent
       @emit "change", k
-      @emit "change:#{k}"
+      @emit "change.#{k}"
 
       @emit "remove", k
-      @emit "remove:#{k}"
+      @emit "remove.#{k}"
     return @
 
 class Module extends SilentModule

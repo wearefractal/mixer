@@ -87,7 +87,7 @@ describe 'modules', ->
       o = mixer.module().create()
       should.exist o
 
-      o.on 'change:test', (v) ->
+      o.on 'change.test', (v) ->
         should.exist v
         v.should.equal 'hello'
         done()
@@ -107,7 +107,7 @@ describe 'modules', ->
       o = mixer.module().create()
       should.exist o
 
-      o.on 'remove:test', done
+      o.on 'remove.test', done
       o.remove 'test'
 
   describe 'global events', ->
@@ -129,7 +129,7 @@ describe 'modules', ->
       o = mixer.module().create()
       should.exist o
 
-      mixer.on 'change:test', (mod, v) ->
+      mixer.on 'change.test', (mod, v) ->
         should.exist v
         should.exist mod
         mod.should.equal o
@@ -155,7 +155,7 @@ describe 'modules', ->
       o = mixer.module().create()
       should.exist o
 
-      mixer.on 'remove:test', (mod) ->
+      mixer.on 'remove.test', (mod) ->
         should.exist mod
         mod.should.equal o
         mixer.removeAllListeners()

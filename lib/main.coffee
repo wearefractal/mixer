@@ -1,13 +1,13 @@
-if process? and exports?
-  {EventEmitter2} = require '../deps/EventEmitter2'
+if process?
+  {EventEmitter} = require 'events'
 else
-  EventEmitter2 = window.EventEmitter2
+  EventEmitter = require 'emitter'
 
 extend = (o, n) -> 
   o[k]=v for own k,v of n
   return o
 
-class SilentModule extends EventEmitter2
+class Module extends EventEmitter
   constructor: (o) ->
     super()
     @_ = props: {}
@@ -26,7 +26,7 @@ class SilentModule extends EventEmitter2
       @_.props[k] = v
       unless silent
         @emit "change", k, v
-        @emit "change.#{k}", v
+        @emit "change:#{k}", v
       return @
 
   has: (k) -> @_.props[k]?
@@ -35,21 +35,16 @@ class SilentModule extends EventEmitter2
     delete @_.props[k]
     unless silent
       @emit "change", k
-      @emit "change.#{k}"
+      @emit "change:#{k}"
 
       @emit "remove", k
-      @emit "remove.#{k}"
+      @emit "remove:#{k}"
     return @
 
-class Module extends SilentModule
-  constructor: (o) ->
-    super o
-    @onAny (a...) ->
-      mixer.emit @event, @, a...
-
-mixer = new SilentModule
+mixer =
   Module: Module
-  Emitter: EventEmitter2
+  Emitter: EventEmitter
+  extend: extend
   module: (a...) ->
     create: (o) ->
       mod = new Module a...
@@ -57,9 +52,4 @@ mixer = new SilentModule
       return mod
     subclass: (b) -> mixer.module a.concat(b)...
 
-  extend: extend
-
-if module?
-  module.exports = mixer
-else
-  window.mixer = mixer
+module.exports = mixer

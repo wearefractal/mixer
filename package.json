@@ -1,7 +1,7 @@
 {
    "name":"mixer",
    "description":"Modules with events and mixins",
-   "version":"0.0.6",
+   "version":"0.0.7",
    "homepage":"http://github.com/wearefractal/mixer",
    "repository":"git://github.com/wearefractal/mixer.git",
    "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
@@ -12,7 +12,8 @@
    },
    "devDependencies":{
       "mocha":"*",
-      "should":"*"
+      "should":"*",
+      "uglify-js":"*"
    },
    "scripts":{
       "test":"mocha --compilers coffee:coffee-script"

@@ -8,7 +8,7 @@
 </tr>
 <tr>
 <td>Description</td>
-<td>Modules with observables, events, and mixins</td>
+<td>Observable models</td>
 </tr>
 <tr>
 <td>Node Version</td>
@@ -16,7 +16,7 @@
 </tr>
 <tr>
 <td>Size</td>
-<td>2.4k</td>
+<td>3.8k</td>
 </tr>
 </table>
 
@@ -24,63 +24,48 @@ If you don't like the coffee-script examples use js2coffee for a conversion.
 
 ## Usage
 
-### Creating a simple empty module
+### Creating a simple module
 
 ```coffee-script
-module = mixer.module
+class Crap extends mixer.Module
   test: ->
     @set "hello", "test"
 
-instance = module.create()
+instance = new Crap
 
 instance.test()
 
-console.log module.get("test") # hello
+console.log instance.get("test") # hello
 
-module.on "change:prop", (val) ->
+instance.on "change:prop", (val) ->
   console.log "prop changed to #{val}"
 
-module.set 'prop', 123
+instance.set 'prop', 123
 ```
 
-### Creating a custom module
+### Creating a module with a constructor
 
 ```coffee-script
-class SweetModule extends mixer.module
+class SweetModule extends mixer.Module
   constructor: (sweet) ->
-    super
     @set 'sweet', sweet
 
-module = new SweetModule true
+instance = new SweetModule true
 
-console.log module.get('sweet') # true
+console.log instance.get('sweet') # true
 
-module.on "change:sweet", (bool) ->
+instance.on "change:sweet", (bool) ->
   if bool is true
     console.log "module is now sweet!"
   else
     console.log "module is no longer sweet!"
 
-module.set 'sweet', false
+instance.set 'sweet', false
 ```
-
-## Core
-
-##### module([obj])
-
-Create returns a new module. Passing in obj in is the same as create().extend(obj)
-
-##### extend(obj, obj1)
-
-Shallow mixin of obj1 into obj
 
 ## Modules
 
 All functions of a module should return the module to be chainable. All modules are an EventEmitter.
-
-##### extend(obj)
-
-Mixes in obj into module
 
 ##### get(key)
 
@@ -90,9 +75,9 @@ Returns value of key or undefined
 
 Sets the value of key to val. 
 
-Will emit ```change, (key, val)``` and ```change.key, (val)``` unless silent is true.
+Will emit ```change, (key, val)``` and ```change:key, (val)``` unless silent is true.
 
-Global mixer object will emit ```change, (module, key, val)``` and ```change.key, (module, val)``` unless silent is true.
+Global mixer object will emit ```change, (module, key, val)``` and ```change:key, (module, val)``` unless silent is true.
 
 ##### has(key)
 
@@ -102,9 +87,9 @@ Will return true if key exists, false if it doesn't.
 
 Delete the value of key.
 
-Will emit ```change, (key)``` ```change.key``` ```remove, (key)``` and ```remove.key``` unless silent is true.
+Will emit ```change, (key)``` ```change:key``` ```remove, (key)``` and ```remove:key``` unless silent is true.
 
-Global mixer object will emit ```change, (module, key)``` ```change.key, (module)``` ```remove, (module, key)``` ```remove.key, (module)``` unless silent is true.
+Global mixer object will emit ```change, (module, key)``` ```change:key, (module)``` ```remove, (module, key)``` ```remove:key, (module)``` unless silent is true.
 
 ## LICENSE
 

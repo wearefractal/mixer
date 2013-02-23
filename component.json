@@ -1,9 +1,8 @@
 {
   "name": "mixer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {
-    "component/emitter":"*",
-    "apily/guid": "*"
+    "component/emitter":"*"
   },
   "main": "dist/main.js",
   "scripts": [

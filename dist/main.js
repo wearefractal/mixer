@@ -70,6 +70,10 @@
       return this;
     };
 
+    Module.prototype.toJSON = function() {
+      return this._;
+    };
+
     return Module;
 
   })(EventEmitter);

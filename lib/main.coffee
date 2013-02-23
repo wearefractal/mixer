@@ -36,6 +36,8 @@ class Module extends EventEmitter
       @emit "remove:#{k}"
     return @
 
+  toJSON: -> @_
+
 mixer =
   Module: Module
   Emitter: EventEmitter

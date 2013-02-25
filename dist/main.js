@@ -71,7 +71,7 @@
     };
 
     Module.prototype.toJSON = function() {
-      return this._;
+      return this._.props;
     };
 
     return Module;

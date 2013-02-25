@@ -432,7 +432,7 @@ require.register("mixer/dist/main.js", function(exports, require, module){
     };
 
     Module.prototype.toJSON = function() {
-      return this._;
+      return this._.props;
     };
 
     return Module;

@@ -451,9 +451,6 @@ require.register("mixer/dist/main.js", function(exports, require, module){
         }
         return this;
       } else {
-        if (v == null) {
-          return;
-        }
         this._.props[k] = v;
         if (!silent) {
           this.emit("change", k, v);
@@ -461,6 +458,17 @@ require.register("mixer/dist/main.js", function(exports, require, module){
         }
         return this;
       }
+    };
+
+    Module.prototype.clear = function() {
+      var k, v, _ref, _results;
+      _ref = this._props;
+      _results = [];
+      for (k in _ref) {
+        v = _ref[k];
+        _results.push(this.set(k, void 0));
+      }
+      return _results;
     };
 
     Module.prototype.has = function(k) {

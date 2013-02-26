@@ -22,13 +22,15 @@ class Module extends EventEmitter
       @set ky, v for ky,v of k
       return @
     else
-      return unless v?
       @_.props[k] = v
       unless silent
         @emit "change", k, v
         @emit "change:#{k}", v
       return @
 
+  clear: ->
+    for k,v of @_props
+      @set k, undefined
   has: (k) -> @_.props[k]?
 
   remove: (k, silent) -> 

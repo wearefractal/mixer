@@ -2,52 +2,46 @@ mixer = require '../'
 should = require 'should'
 require 'mocha'
 
-describe 'core', ->
-  describe 'extend()', ->
-    it 'should work', (done) ->
-      o = test: 1, wat: 'dood'
-      a = test: 2, hello: 'world'
-      n = mixer.extend o, a
-      n.should.eql
-        test: 2
-        wat: 'dood'
-        hello: 'world'
-      done()
-
 describe 'modules', ->
   describe 'create', ->
     it 'should create module from empty', (done) ->
-      o = mixer.module()
+      o = new mixer.Module
       should.exist o
-      should.exist o.create
       done()
 
     it 'should create module from object', (done) ->
-      o = mixer.module test: "hello"
-      should.exist o
-      should.exist o.create
-      n = o.create()
+      class test extends mixer.Module
+        test: "hello"
+      n = new test
       should.exist n.test
       n.test.should.equal "hello"
       done()
 
     it 'should be extendable into new modules', (done) ->
-      test = mixer.module
+      class test extends mixer.Module
         init: ->
           @test = "hello"
-      o = test.create()
+
+      class testt extends test
+        init: ->
+          @hello = "ye"
+          super
+
+      o = new testt
       should.exist o
       should.exist o.init
       o.init()
       should.exist o.test
       o.test.should.equal "hello"
+      should.exist o.hello
+      o.hello.should.equal "ye"
       done()
 
     it 'should extend module with overrides', (done) ->
-      test = mixer.module
+      class test extends mixer.Module
         init: ->
           @test = "hello"
-      non = test.create hello: "world"
+      non = new test hello: "world"
       should.exist non
       should.exist non.init
       non.init()
@@ -57,7 +51,7 @@ describe 'modules', ->
       done()
 
     it 'should get/set/has/remove', (done) ->
-      o = mixer.module().create()
+      o = new mixer.Module
       should.exist o
 
       nuo = o.set 'test', 'hello'
@@ -74,7 +68,7 @@ describe 'modules', ->
 
   describe 'module events', ->
     it 'should emit event on set', (done) ->
-      o = mixer.module().create()
+      o = new mixer.Module
       should.exist o
 
       o.on 'change', (k, v) ->
@@ -84,7 +78,7 @@ describe 'modules', ->
       o.set 'test', 'hello'
 
     it 'should emit namespaced event on set', (done) ->
-      o = mixer.module().create()
+      o = new mixer.Module
       should.exist o
 
       o.on 'change:test', (v) ->
@@ -94,7 +88,7 @@ describe 'modules', ->
       o.set 'test', 'hello'
 
     it 'should emit event on remove', (done) ->
-      o = mixer.module().create()
+      o = new mixer.Module
       should.exist o
 
       o.on 'remove', (k) ->
@@ -104,7 +98,7 @@ describe 'modules', ->
       o.remove 'test'
 
     it 'should emit namespaced event on remove', (done) ->
-      o = mixer.module().create()
+      o = new mixer.Module
       should.exist o
 
       o.on 'remove:test', done

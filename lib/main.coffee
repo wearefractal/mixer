@@ -3,15 +3,10 @@ if process?
 else
   EventEmitter = require 'emitter'
 
-extend = (o, n) -> 
-  o[k]=v for own k,v of n
-  return o
-
 class Module extends EventEmitter
   constructor: (o) ->
-    super()
     @_ = props: {}
-    extend @, o
+    @set o if o?
 
   get: (k) -> @_.props[k]
   getAll: -> @_.props
@@ -43,15 +38,10 @@ class Module extends EventEmitter
       @emit "remove:#{k}"
     return @
 
+  toJSON: -> @_.props
+
 mixer =
   Module: Module
   Emitter: EventEmitter
-  extend: extend
-  module: (a...) ->
-    create: (o) ->
-      mod = new Module a...
-      mod.set o
-      return mod
-    subclass: (b) -> mixer.module a.concat(b)...
 
 module.exports = mixer

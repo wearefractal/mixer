@@ -23,9 +23,10 @@ class Module extends EventEmitter
         @emit "change:#{k}", v
       return @
 
-  clear: ->
-    for k,v of @_props
-      @set k, undefined
+  clear: (silent) ->
+    @remove k, silent for k,v of @_props
+    return @
+
   has: (k) -> @_.props[k]?
 
   remove: (k, silent) -> 

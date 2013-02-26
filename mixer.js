@@ -413,15 +413,14 @@ require.register("mixer/dist/main.js", function(exports, require, module){
       }
     };
 
-    Module.prototype.clear = function() {
-      var k, v, _ref, _results;
+    Module.prototype.clear = function(silent) {
+      var k, v, _ref;
       _ref = this._props;
-      _results = [];
       for (k in _ref) {
         v = _ref[k];
-        _results.push(this.set(k, void 0));
+        this.remove(k, silent);
       }
-      return _results;
+      return this;
     };
 
     Module.prototype.has = function(k) {

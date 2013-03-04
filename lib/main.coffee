@@ -14,7 +14,7 @@ class Module extends EventEmitter
   set: (k, v, silent) ->
     return unless k?
     if typeof k is 'object'
-      @set ky, v for ky,v of k
+      @set ky, v, silent for ky,v of k
       return @
     else
       @_.props[k] = v
@@ -39,7 +39,7 @@ class Module extends EventEmitter
       @emit "remove:#{k}"
     return @
 
-  toJSON: -> @_.props
+  toJSON: -> @getAll()
 
 mixer =
   Module: Module

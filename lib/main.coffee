@@ -14,7 +14,8 @@ class Module extends EventEmitter
   set: (k, v, silent) ->
     return unless k?
     if typeof k is 'object'
-      @set ky, v, silent for ky,v of k
+      silent = v
+      @set ky, vy, silent for ky,vy of k
       return @
     else
       @_props[k] = v

@@ -77,6 +77,26 @@ describe 'modules', ->
         done()
       o.set 'test', 'hello'
 
+    it 'should emit event on silent set', (done) ->
+      o = new mixer.Module
+      should.exist o
+
+      o.on 'change', (k, v) ->
+        throw new Error "not supposed to emit"
+
+      o.set 'test', 'hello', true
+      done()
+
+    it 'should emit event on silent set with object', (done) ->
+      o = new mixer.Module
+      should.exist o
+
+      o.on 'change', (k, v) ->
+        throw new Error "not supposed to emit"
+
+      o.set {test: 'hello'}, true
+      done()
+
     it 'should emit namespaced event on set', (done) ->
       o = new mixer.Module
       should.exist o

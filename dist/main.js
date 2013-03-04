@@ -28,14 +28,15 @@
     };
 
     Module.prototype.set = function(k, v, silent) {
-      var ky;
+      var ky, vy;
       if (k == null) {
         return;
       }
       if (typeof k === 'object') {
+        silent = v;
         for (ky in k) {
-          v = k[ky];
-          this.set(ky, v, silent);
+          vy = k[ky];
+          this.set(ky, vy, silent);
         }
         return this;
       } else {

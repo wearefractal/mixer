@@ -24,7 +24,7 @@ class Module extends EventEmitter
       return @
 
   clear: (silent) ->
-    @remove k, silent for k,v of @_props
+    @remove k, silent for k,v of @_.props
     return @
 
   has: (k) -> @_.props[k]?

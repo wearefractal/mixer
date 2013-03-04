@@ -54,7 +54,7 @@
 
     Module.prototype.clear = function(silent) {
       var k, v, _ref;
-      _ref = this._props;
+      _ref = this._.props;
       for (k in _ref) {
         v = _ref[k];
         this.remove(k, silent);

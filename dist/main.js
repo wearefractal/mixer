@@ -15,20 +15,16 @@
     __extends(Module, _super);
 
     function Module(o) {
-      this._ = {
-        props: {}
-      };
-      if (o != null) {
-        this.set(o);
-      }
+      this._props = {};
+      this.set(o);
     }
 
     Module.prototype.get = function(k) {
-      return this._.props[k];
+      return this._props[k];
     };
 
     Module.prototype.getAll = function() {
-      return this._.props;
+      return this._props;
     };
 
     Module.prototype.set = function(k, v, silent) {
@@ -43,7 +39,7 @@
         }
         return this;
       } else {
-        this._.props[k] = v;
+        this._props[k] = v;
         if (!silent) {
           this.emit("change", k, v);
           this.emit("change:" + k, v);
@@ -54,7 +50,7 @@
 
     Module.prototype.clear = function(silent) {
       var k, v, _ref;
-      _ref = this._.props;
+      _ref = this._props;
       for (k in _ref) {
         v = _ref[k];
         this.remove(k, silent);
@@ -63,11 +59,11 @@
     };
 
     Module.prototype.has = function(k) {
-      return this._.props[k] != null;
+      return this._props[k] != null;
     };
 
     Module.prototype.remove = function(k, silent) {
-      delete this._.props[k];
+      delete this._props[k];
       if (!silent) {
         this.emit("change", k);
         this.emit("change:" + k);

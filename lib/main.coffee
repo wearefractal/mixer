@@ -5,11 +5,11 @@ else
 
 class Module extends EventEmitter
   constructor: (o) ->
-    @_ = props: {}
-    @set o if o?
+    @_props = {}
+    @set o
 
-  get: (k) -> @_.props[k]
-  getAll: -> @_.props
+  get: (k) -> @_props[k]
+  getAll: -> @_props
 
   set: (k, v, silent) ->
     return unless k?
@@ -17,20 +17,20 @@ class Module extends EventEmitter
       @set ky, v, silent for ky,v of k
       return @
     else
-      @_.props[k] = v
+      @_props[k] = v
       unless silent
         @emit "change", k, v
         @emit "change:#{k}", v
       return @
 
   clear: (silent) ->
-    @remove k, silent for k,v of @_.props
+    @remove k, silent for k,v of @_props
     return @
 
-  has: (k) -> @_.props[k]?
+  has: (k) -> @_props[k]?
 
   remove: (k, silent) -> 
-    delete @_.props[k]
+    delete @_props[k]
     unless silent
       @emit "change", k
       @emit "change:#{k}"
